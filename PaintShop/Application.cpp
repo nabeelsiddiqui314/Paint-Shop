@@ -3,9 +3,13 @@
 
 
 Application::Application() {
-	m_window.create(sf::VideoMode(1200, 650), "PaintShop");
+	m_data = new Data();
+	if (!m_files.Parse(m_data)) {
+		return;
+	}
+	m_window.create(sf::VideoMode(m_data->window_size.x, m_data->window_size.y), "PaintShop");
 
-	m_main.Initialize();
+	m_main.Initialize(m_data);
 	Run();
 }
 
@@ -16,6 +20,10 @@ void Application::Run() {
 		while (m_window.pollEvent(evnt)) {
 			if (evnt.type == sf::Event::Closed) {
 				m_window.close();
+			}
+			if (evnt.type == sf::Event::Resized) {
+				m_data->window_size.x = evnt.size.width;
+				m_data->window_size.y = evnt.size.height;
 			}
 		}
 
@@ -29,5 +37,6 @@ void Application::Run() {
 
 
 Application::~Application() {
-
+	m_files.Write();
+	delete m_data;
 }

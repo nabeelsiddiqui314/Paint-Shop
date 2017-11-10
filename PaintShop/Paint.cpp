@@ -7,10 +7,11 @@ Paint::Paint() {
 }
 
 
-void Paint::Initialize() {
-	m_canvas.create(1200, 650, sf::Color::White);
+void Paint::Initialize(Data* data) {
+	m_data = data;
+	m_canvas.create(m_data->window_size.x, m_data->window_size.y, sf::Color::Yellow);
 	m_backround.setPosition(0, 0);
-	m_backround.setSize(sf::Vector2f(1200, 650));
+	m_backround.setSize(sf::Vector2f(m_data->window_size.x, m_data->window_size.y));
 }
 
 
