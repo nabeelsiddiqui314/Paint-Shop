@@ -9,7 +9,7 @@ Paint::Paint() {
 
 void Paint::Initialize(Data* data) {
 	m_data = data;
-	m_canvas.create(m_data->window_size.x, m_data->window_size.y, sf::Color::Yellow);
+	m_canvas.create(m_data->window_size.x, m_data->window_size.y, sf::Color::White);
 	m_backround.setPosition(0, 0);
 	m_backround.setSize(sf::Vector2f(m_data->window_size.x, m_data->window_size.y));
 }
@@ -27,5 +27,5 @@ void Paint::Run(sf::RenderWindow& window) {
 
 
 Paint::~Paint() {
-
+	
 }

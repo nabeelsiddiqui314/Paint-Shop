@@ -28,7 +28,6 @@ bool FileParser::OpenFiles() {
 	std::string temp;
 
 	m_read_window_size >> m_data->window_size.x >> m_data->window_size.y;
-	std::cout << m_data->window_size.x << " " << m_data->window_size.y << std::endl;
 
 	return true;
 }

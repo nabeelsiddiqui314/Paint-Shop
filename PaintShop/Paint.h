@@ -2,6 +2,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "Data.h"
+#include "GUI.h"
 
 class Paint
 {
