@@ -19,6 +19,6 @@ private:
 	Data*              m_data;
 	sf::Image          m_canvas;
 	sf::Texture        m_canvasTexture;
-	sf::RectangleShape m_backround;
+	sf::RectangleShape m_canvasRect;
 };
 
