@@ -9,10 +9,20 @@ Application::Application() {
 	}
 	m_window.create(sf::VideoMode(m_data->window_size.x, m_data->window_size.y), "PaintShop");
 
-	m_main.Initialize(m_data);
+	m_canvas.create(m_data->window_size.x, m_data->window_size.y, sf::Color::White);
+	m_canvasRect.setPosition(0, 0);
+	m_canvasRect.setSize(sf::Vector2f(m_data->window_size.x, m_data->window_size.y));
+	m_main.Initialize(m_data, m_canvas);
 	Run();
 }
 
+inline void Application::UpdateCanvas() {
+	m_canvasRect.setPosition(m_data->canvas_startPos.x, m_data->canvas_startPos.y);
+	m_canvasRect.setSize(sf::Vector2f(m_canvas.getSize()));
+	m_canvasTexture.loadFromImage(m_canvas);
+	m_canvasRect.setTexture(&m_canvasTexture);
+	m_window.draw(m_canvasRect);
+}
 
 void Application::Run() {
 	while (m_window.isOpen()) {
@@ -29,6 +39,12 @@ void Application::Run() {
 
 		m_window.clear();   /////////////////////////////////////
 
+		UpdateCanvas();
+		if (GUI::IsMouseInBounds(m_window)) {
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+				m_canvas.setPixel(sf::Mouse::getPosition(m_window).x, sf::Mouse::getPosition(m_window).y, sf::Color::Green);
+			}
+		}
 		m_main.Run(m_window);
 
 		m_window.display(); /////////////////////////////////////

@@ -18,5 +18,6 @@ private:
 	std::ifstream m_read_window_size;
 	std::ofstream m_write_window_size;
 	Data*         m_data;
+	std::string   m_windowSize_filepath;
 };
 

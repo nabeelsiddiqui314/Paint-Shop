@@ -2,7 +2,8 @@
 #include "FileParser.h"
 
 
-FileParser::FileParser()
+FileParser::FileParser() :
+	m_windowSize_filepath("Data/window_size.txt")
 {
 }
 
@@ -20,9 +21,10 @@ bool FileParser::Parse(Data* data) {
 }
 
 bool FileParser::OpenFiles() {
-	m_read_window_size.open("Data/window_size.txt");
+	m_read_window_size.open(m_windowSize_filepath);
 	if (!m_read_window_size.is_open()) {
-		PrintError("Inavlid filepath");
+		PrintError("cannot open file");
+		return false;
 	}
 
 	std::string temp;
@@ -33,11 +35,7 @@ bool FileParser::OpenFiles() {
 }
 
 void FileParser::Write() {
-	m_write_window_size.open("Data/window_size.txt");
-
-	if (!m_write_window_size.is_open()) {
-		PrintError("Inavlid filepath");
-	}
+	m_write_window_size.open(m_windowSize_filepath);
 
 	m_write_window_size.clear();
 	m_write_window_size << m_data->window_size.x << " " << m_data->window_size.y;

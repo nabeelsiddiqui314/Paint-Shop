@@ -10,15 +10,10 @@ public:
 	 Paint();
 	~Paint();
 public:
-	void Initialize(Data* data); //gets called in application once
+	void Initialize(Data* data, sf::Image& img);
 
-	void Render(sf::RenderWindow& window);
-
-	void Run(sf::RenderWindow& window); // gets called in application loop every frame
+	void Run(sf::RenderWindow& window);
 private:
-	Data*              m_data;
-	sf::Image          m_canvas;
-	sf::Texture        m_canvasTexture;
-	sf::RectangleShape m_canvasRect;
+	Data* m_data;
 };
 
