@@ -2,7 +2,14 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "Data.h"
-#include "GUI.h"
+#include "Interface.h"
+
+enum class Tool {
+	NONE,
+	PEN,
+	BRUSH,
+	FILL_BUCKET
+};
 
 class Paint
 {
@@ -12,8 +19,13 @@ public:
 public:
 	void Initialize(Data* data, sf::Image& img);
 
+	void CheckTool();
+	void Draw(sf::RenderWindow& window);
+	void Clear();
+
 	void Run(sf::RenderWindow& window);
 private:
 	Data* m_data;
+	Tool  m_tool;
 };
 

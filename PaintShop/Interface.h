@@ -2,11 +2,11 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-class GUI
+class Interface
 {
 public:
-	 GUI();
-	~GUI();
+	Interface();
+	~Interface();
 public:
 	static bool IsMouseInBounds (sf::RenderWindow& window);                       //overload: will check if mouse is in window 
 	static bool IsMouseInBounds (sf::RenderWindow& window, sf::IntRect bounds);   //overload: will check if mouse is in specified bounds

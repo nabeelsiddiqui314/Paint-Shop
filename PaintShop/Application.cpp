@@ -4,12 +4,13 @@
 
 Application::Application() {
 	m_data = new Data();
+	m_data->canvas = &m_canvas;
 	if (!m_files.Parse(m_data)) {
 		return;
 	}
 	m_window.create(sf::VideoMode(m_data->window_size.x, m_data->window_size.y), "PaintShop");
 
-	m_canvas.create(m_data->window_size.x, m_data->window_size.y, sf::Color::White);
+	m_canvas.create(m_data->window_size.x, m_data->window_size.y, m_data->backroundColor);
 	m_canvasRect.setPosition(0, 0);
 	m_canvasRect.setSize(sf::Vector2f(m_data->window_size.x, m_data->window_size.y));
 	m_main.Initialize(m_data, m_canvas);
@@ -40,11 +41,6 @@ void Application::Run() {
 		m_window.clear();   /////////////////////////////////////
 
 		UpdateCanvas();
-		if (GUI::IsMouseInBounds(m_window)) {
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-				m_canvas.setPixel(sf::Mouse::getPosition(m_window).x, sf::Mouse::getPosition(m_window).y, sf::Color::Green);
-			}
-		}
 		m_main.Run(m_window);
 
 		m_window.display(); /////////////////////////////////////

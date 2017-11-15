@@ -15,9 +15,9 @@ public:
 private:
 	bool          OpenFiles();
 	void          PrintError(std::string errorMessage);
-	std::ifstream m_read_window_size;
-	std::ofstream m_write_window_size;
+	std::ifstream m_read_data;
+	std::ofstream m_write_data;
 	Data*         m_data;
-	std::string   m_windowSize_filepath;
+	std::string   m_data_filepath;
 };
 
