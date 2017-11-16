@@ -9,29 +9,29 @@ Paint::Paint() {
 
 void Paint::Initialize(Data* data, sf::Image& img) {
 	m_data = data;
-	m_tool = Tool::NONE;
+	m_tool = NONE;
 }
 
 void Paint::CheckTool() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
-		m_tool = Tool::PEN;
+		m_tool = PEN;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
-		m_tool = Tool::BRUSH;
+		m_tool = BRUSH;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::N)) {
-		m_tool = Tool::NONE;
+		m_tool = NONE;
 	}
 }
 
 void Paint::Draw(sf::RenderWindow& window) {
 	switch (m_tool) {
-	case Tool::PEN:
+	case PEN:
 		if (Interface::IsMouseInBounds(window) && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			m_data->canvas->setPixel(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y, sf::Color::Green);
 		}
 		break;
-	case Tool::BRUSH:
+	case BRUSH:
 		if (Interface::IsMouseInBounds(window) && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			for (int x = sf::Mouse::getPosition(window).x - 3; x < sf::Mouse::getPosition(window).x + 3; x++) {
 				for (int y = sf::Mouse::getPosition(window).y - 10; y < sf::Mouse::getPosition(window).y + 10; y++) {
@@ -58,6 +58,7 @@ void Paint::Run(sf::RenderWindow& window) {
 	Clear();
 	CheckTool();
 	Draw(window);
+	window.draw(w);
 }
 
 

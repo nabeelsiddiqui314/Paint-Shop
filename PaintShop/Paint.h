@@ -3,8 +3,9 @@
 #include <SFML/Graphics.hpp>
 #include "Data.h"
 #include "Interface.h"
+#include "Widget.h"
 
-enum class Tool {
+enum Tool {
 	NONE,
 	PEN,
 	BRUSH,
@@ -27,5 +28,6 @@ public:
 private:
 	Data* m_data;
 	Tool  m_tool;
+	Widget w;
 };
 
