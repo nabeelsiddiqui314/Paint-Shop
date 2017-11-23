@@ -10,6 +10,12 @@ Paint::Paint() {
 void Paint::Initialize(Data* data, sf::Image& img) {
 	m_data = data;
 	m_tool = NONE;
+
+	m_toolIcons.Add("brush", sf::Vector2f(20, 20), sf::Vector2f(20, 20), "icons.png", sf::IntRect(0, 0, 20, 20),
+		sf::IntRect(0, 20, 20, 20), sf::IntRect(0, 40, 20, 20), SELECT);
+
+	m_toolIcons.Add("eraser", sf::Vector2f(20, 20), sf::Vector2f( 50, 20), "icons.png", sf::IntRect(20, 0, 20, 20),
+		sf::IntRect(20, 20, 20, 20), sf::IntRect(20, 40, 20, 20), SELECT);
 }
 
 void Paint::CheckTool() {
@@ -24,7 +30,7 @@ void Paint::CheckTool() {
 	}
 }
 
-void Paint::Draw(sf::RenderWindow& window) {
+void Paint::PaintStuff(sf::RenderWindow& window) {
 	switch (m_tool) {
 	case PEN:
 		if (Interface::IsMouseInBounds(window) && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
@@ -35,9 +41,6 @@ void Paint::Draw(sf::RenderWindow& window) {
 		if (Interface::IsMouseInBounds(window) && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			for (int x = sf::Mouse::getPosition(window).x - 3; x < sf::Mouse::getPosition(window).x + 3; x++) {
 				for (int y = sf::Mouse::getPosition(window).y - 10; y < sf::Mouse::getPosition(window).y + 10; y++) {
-					/*if (x > sf::Mouse::getPosition(window).x - 5) {
-						break;
-					}*/
 					m_data->canvas->setPixel(x, y, sf::Color::Blue);
 				}
 			}
@@ -57,8 +60,8 @@ void Paint::Clear() {
 void Paint::Run(sf::RenderWindow& window) {
 	Clear();
 	CheckTool();
-	Draw(window);
-	window.draw(w);
+	PaintStuff(window);
+	m_toolIcons.Update(window);
 }
 
 

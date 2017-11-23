@@ -4,6 +4,7 @@
 #include "Data.h"
 #include "Interface.h"
 #include "Widget.h"
+#include "WidgetManager.h"
 
 enum Tool {
 	NONE,
@@ -21,13 +22,12 @@ public:
 	void Initialize(Data* data, sf::Image& img);
 
 	void CheckTool();
-	void Draw(sf::RenderWindow& window);
+	void PaintStuff(sf::RenderWindow& window);
 	void Clear();
 
 	void Run(sf::RenderWindow& window);
 private:
 	Data* m_data;
 	Tool  m_tool;
-	Widget w;
+	WidgetManager m_toolIcons;
 };
-
