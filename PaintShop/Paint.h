@@ -10,6 +10,7 @@ enum Tool {
 	NONE,
 	PEN,
 	BRUSH,
+	ERASER,
 	FILL_BUCKET
 };
 
@@ -19,15 +20,16 @@ public:
 	 Paint();
 	~Paint();
 public:
-	void Initialize(Data* data, sf::Image& img);
+	void Initialize (Data* data, sf::Image& img);
 
-	void CheckTool();
-	void PaintStuff(sf::RenderWindow& window);
-	void Clear();
+	void CheckTool ();
+	void PaintStuff (sf::RenderWindow& window);
+	inline void Clear ();
 
 	void Run(sf::RenderWindow& window);
 private:
-	Data* m_data;
-	Tool  m_tool;
+	Data*         m_data;
+	Tool          m_tool;
 	WidgetManager m_toolIcons;
+	sf::IntRect   m_canvasBounds;
 };
