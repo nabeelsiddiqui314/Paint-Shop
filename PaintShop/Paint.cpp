@@ -35,43 +35,49 @@ void Paint::CheckTool() {
 	}
 }
 
+void Paint::Draw(sf::RenderWindow& window, const sf::IntRect& bounds, unsigned int width, unsigned int height, const sf::Color& color) {
+	if (Interface::IsMouseInBounds(window, bounds) && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+		for (int x = sf::Mouse::getPosition(window).x - width; x < sf::Mouse::getPosition(window).x + width; x++) {
+			for (int y = sf::Mouse::getPosition(window).y - height; y < sf::Mouse::getPosition(window).y + height; y++) {
+				m_data->canvas->setPixel(x, y, color);
+			}
+		}
+	}
+}
+
+void Paint::Draw(sf::RenderWindow& window, unsigned int width, unsigned int height, const sf::Color& color) {
+	if (Interface::IsMouseInBounds(window) && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+		for (int x = sf::Mouse::getPosition(window).x - width; x < sf::Mouse::getPosition(window).x + width; x++) {
+			for (int y = sf::Mouse::getPosition(window).y - height; y < sf::Mouse::getPosition(window).y + height; y++) {
+				m_data->canvas->setPixel(x, y, color);
+			}
+		}
+	}
+}
+
 void Paint::PaintStuff(sf::RenderWindow& window) {
 	switch (m_tool) {
 	case BRUSH:
-		if (Interface::IsMouseInBounds(window, m_canvasBounds) && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-			for (int x = sf::Mouse::getPosition(window).x - 10; x < sf::Mouse::getPosition(window).x + 10; x++) {
-				for (int y = sf::Mouse::getPosition(window).y - 10; y < sf::Mouse::getPosition(window).y + 10; y++) {
-					m_data->canvas->setPixel(x, y, sf::Color::Green);
-				}
-			}
-		}
+		Draw(window, m_canvasBounds, 10, 10, sf::Color::Green);
 		break;
 	case PEN:
-		if (Interface::IsMouseInBounds(window, m_canvasBounds) && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-			for (int x = sf::Mouse::getPosition(window).x - 3; x < sf::Mouse::getPosition(window).x + 3; x++) {
-				for (int y = sf::Mouse::getPosition(window).y - 10; y < sf::Mouse::getPosition(window).y + 10; y++) {
-					m_data->canvas->setPixel(x, y, sf::Color::Blue);
-				}
-			}
-		}
+		Draw(window, m_canvasBounds, 4, 10, sf::Color::Blue);
 		break;
 	case ERASER:
-		if (Interface::IsMouseInBounds(window, m_canvasBounds) && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-			for (int x = sf::Mouse::getPosition(window).x - 10; x < sf::Mouse::getPosition(window).x + 10; x++) {
-				for (int y = sf::Mouse::getPosition(window).y - 10; y < sf::Mouse::getPosition(window).y + 10; y++) {
-					m_data->canvas->setPixel(x, y, m_data->backroundColor);
-				}
-			}
-		}
+		Draw(window, m_canvasBounds, 4, 10, m_data->backroundColor);
 		break;
 	default:
 		break;
 	}
 }
 
+inline void Paint::SetBgColor(const sf::Color& color) {
+	m_data->canvas->create(m_data->window_size.x, m_data->window_size.y, color);
+}
+
 inline void Paint::Clear() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
-		m_data->canvas->create(m_data->window_size.x, m_data->window_size.y, m_data->backroundColor);
+		SetBgColor(m_data->backroundColor);
 	}
 }
 
