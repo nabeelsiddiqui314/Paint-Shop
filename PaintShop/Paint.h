@@ -23,8 +23,7 @@ public:
 	void Initialize (Data* data, sf::Image& img);
 
 	void CheckTool ();
-	void Draw(sf::RenderWindow& window, const sf::IntRect& bounds, unsigned int width, unsigned int height, const sf::Color& color);
-	void Draw(sf::RenderWindow& window, unsigned int width, unsigned int height, const sf::Color& color);
+	void Draw(sf::RenderWindow& window, const sf::IntRect& bounds, int width, int height, const sf::Color& color);
 	void PaintStuff (sf::RenderWindow& window);
 	inline void Clear ();
 	inline void SetBgColor(const sf::Color& color);
@@ -34,5 +33,4 @@ private:
 	Data*         m_data;
 	Tool          m_tool;
 	WidgetManager m_toolIcons;
-	sf::IntRect   m_canvasBounds;
 };

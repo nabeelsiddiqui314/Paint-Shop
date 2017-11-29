@@ -8,9 +8,9 @@ Application::Application() {
 	if (!m_files.Parse(m_data)) {
 		return;
 	}
-	m_window.create(sf::VideoMode(m_data->window_size.x, m_data->window_size.y), "PaintShop");
+	m_window.create(sf::VideoMode(m_data->window_size.x, m_data->window_size.y), "PaintShop", sf::Style::Close);
 
-	m_canvas.create(m_data->window_size.x, m_data->window_size.y, m_data->backroundColor);
+	m_canvas.create(m_data->canvas_bounds.width, m_data->canvas_bounds.height, m_data->backroundColor);
 	m_canvasRect.setPosition(0, 0);
 	m_canvasRect.setSize(sf::Vector2f(m_data->window_size.x, m_data->window_size.y));
 	m_main.Initialize(m_data, m_canvas);
@@ -18,7 +18,7 @@ Application::Application() {
 }
 
 inline void Application::UpdateCanvas() {
-	m_canvasRect.setPosition(m_data->canvas_startPos.x, m_data->canvas_startPos.y);
+	m_canvasRect.setPosition(m_data->canvas_bounds.left, m_data->canvas_bounds.top);
 	m_canvasRect.setSize(sf::Vector2f(m_canvas.getSize()));
 	m_canvasTexture.loadFromImage(m_canvas);
 	m_canvasRect.setTexture(&m_canvasTexture);
@@ -38,7 +38,7 @@ void Application::Run() {
 			}
 		}
 
-		m_window.clear();   /////////////////////////////////////
+		m_window.clear(sf::Color(58, 57, 68));   /////////////////////////////////////
 
 		UpdateCanvas();
 		m_main.Run(m_window);
