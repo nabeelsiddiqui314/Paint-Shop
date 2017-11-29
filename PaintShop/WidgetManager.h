@@ -21,6 +21,5 @@ private:
 	std::unordered_map <std::string, Widget> m_widgetGroup;
 	Widget                                   m_w;
 	Widget*                                  m_clickedWidget = nullptr;
-	bool                                     m_clickBegan = false;
 };
 

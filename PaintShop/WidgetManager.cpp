@@ -25,9 +25,8 @@ void WidgetManager::Update(sf::RenderWindow& window) {
 			iterator.second.CropWidget(window);
 			if (iterator.second.IsClicked()) {
 				m_clickedWidget = &iterator.second;
-				m_clickBegan = true;
 			}
-			if (m_clickBegan) {
+			if (m_clickedWidget != nullptr) {
 				for (auto& unclickedIterator : m_widgetGroup) {
 					if (&unclickedIterator.second != m_clickedWidget) unclickedIterator.second.Deselect();
 				}
@@ -56,5 +55,5 @@ const Widget& WidgetManager::Get(const std::string name) const {
 
 
 WidgetManager::~WidgetManager() {
-
+	m_widgetGroup.clear();
 }

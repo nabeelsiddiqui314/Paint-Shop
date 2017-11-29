@@ -17,7 +17,7 @@ private:
 	sf::RenderWindow   m_window;
 	Data*              m_data;
 	FileParser         m_files;
-	Paint              m_main;
+	Paint              m_paint;
 
 	sf::Image          m_canvas;
 	sf::Texture        m_canvasTexture;

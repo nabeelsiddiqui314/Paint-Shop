@@ -13,7 +13,7 @@ Application::Application() {
 	m_canvas.create(m_data->canvas_bounds.width, m_data->canvas_bounds.height, m_data->backroundColor);
 	m_canvasRect.setPosition(0, 0);
 	m_canvasRect.setSize(sf::Vector2f(m_data->window_size.x, m_data->window_size.y));
-	m_main.Initialize(m_data, m_canvas);
+	m_paint.Initialize(m_data, m_canvas);
 	Run();
 }
 
@@ -41,7 +41,7 @@ void Application::Run() {
 		m_window.clear(sf::Color(58, 57, 68));   /////////////////////////////////////
 
 		UpdateCanvas();
-		m_main.Run(m_window);
+		m_paint.Run(m_window);
 
 		m_window.display(); /////////////////////////////////////
 	}
