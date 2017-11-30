@@ -3,7 +3,7 @@
 
 
 FileParser::FileParser() :
-	m_data_filepath("Data/save_data.txt")
+	m_data_filepath("./Data/save_data.txt")
 {
 }
 

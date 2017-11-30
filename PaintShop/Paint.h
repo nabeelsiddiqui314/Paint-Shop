@@ -5,6 +5,7 @@
 #include "Interface.h"
 #include "Widget.h"
 #include "WidgetManager.h"
+#include "Slider.h"
 
 enum Tool {
 	NONE,
@@ -48,8 +49,9 @@ private:
 	Colors        m_selectedColor;
 	WidgetManager m_colorIcons;
 	sf::Color     m_paintColor;
+	Slider        m_brushSlider;
 
-	std::string m_colorsNames[8] = { 
+	std::string   m_colorsNames[8] = { 
 		"BLACK",
 		"WHITE",
 		"BLUE",

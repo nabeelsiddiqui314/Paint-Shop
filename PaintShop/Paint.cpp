@@ -34,6 +34,7 @@ void Paint::Initialize(Data* data, sf::Image& img) {
 				sf::IntRect(i*20, 20, 20, 20), sf::IntRect(i*20, 40, 20, 20));
 		}
 	}
+	m_brushSlider.AddSlider(sf::Vector2f(400, 30), 30, 200, 50, sf::Color::Blue);
 }
 
 void Paint::CheckTool() {
@@ -78,9 +79,9 @@ void Paint::CheckColor() {
 }
 
 void Paint::Draw(sf::RenderWindow& window, const sf::IntRect& bounds, int width, int height, const sf::Color& color) {
-	sf::IntRect DrawBounds = {bounds.left + width, bounds.top + height, bounds.width + bounds.left - width, bounds.height + bounds.top - height};
+	sf::IntRect DrawBounds = {bounds.left + width+1, bounds.top + height+1, bounds.width + bounds.left - width-1, bounds.height + bounds.top - height-1};
 
-	if (Interface::IsMouseInBounds(window, DrawBounds) && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && Interface::IsMouseInBounds(window, DrawBounds)) {
 		for (int x = sf::Mouse::getPosition(window).x - width; x < sf::Mouse::getPosition(window).x + width; x++) {
 			for (int y = sf::Mouse::getPosition(window).y - height; y < sf::Mouse::getPosition(window).y + height; y++) {
 				m_data->canvas->setPixel(x - m_data->canvas_bounds.left, y - m_data->canvas_bounds.top, color);
@@ -90,15 +91,17 @@ void Paint::Draw(sf::RenderWindow& window, const sf::IntRect& bounds, int width,
 }
 
 void Paint::PaintStuff(sf::RenderWindow& window) {
+	m_brushSlider.Update(window);
+
 	switch (m_tool) {
 	case BRUSH:
-		Draw(window, m_data->canvas_bounds, 10, 10, m_paintColor);
+		Draw(window, m_data->canvas_bounds, m_brushSlider.GetValue(), m_brushSlider.GetValue(), m_paintColor);
 		break;
 	case PEN:
-		Draw(window, m_data->canvas_bounds, 4, 10, m_paintColor);
+		Draw(window, m_data->canvas_bounds, m_brushSlider.GetValue() / 2, m_brushSlider.GetValue(), m_paintColor);
 		break;
 	case ERASER:
-		Draw(window, m_data->canvas_bounds, 4, 10, m_data->backroundColor);
+		Draw(window, m_data->canvas_bounds, m_brushSlider.GetValue(), 10, m_data->backroundColor);
 		break;
 	default:
 		break;
