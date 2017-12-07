@@ -10,7 +10,7 @@ public:
 	 Slider();
 	~Slider();
 public:
-	void AddSlider(const sf::Vector2f& pos, const double startVal, const double length, const double max, const sf::Color& color);
+	void AddSlider(const sf::Vector2f& pos, const double startVal, const double length, const double max);
 	int GetValue() const;
 	void Update(sf::RenderWindow& window);
 private:
@@ -20,5 +20,7 @@ private:
 	double             m_value;
 	sf::Time           m_clickTime;
 	sf::Clock          m_clickClock;
+	sf::Texture sliderTex;
+	sf::Texture sliderSurfaceTex;
 };
 

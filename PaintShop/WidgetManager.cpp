@@ -9,14 +9,17 @@ WidgetManager::WidgetManager(const Type& type) : m_type(type) {
 
 void WidgetManager::Add(std::string name, const sf::Vector2f& size, const sf::Vector2f& pos, const std::string filepath, const sf::IntRect& crop,
 	const  sf::IntRect&  hovered, const sf::IntRect& clicked) {
-	m_w.Init(size, pos, filepath, crop, hovered, clicked, m_type);
+	m_w = new Widget();
+	m_w->Init(size, pos, filepath, crop, hovered, clicked, m_type);
 
 	std::unordered_map <std::string, Widget>::const_iterator found = m_widgetGroup.find(name);
 	while (found != m_widgetGroup.end()) {
 		name += "0";
 		found = m_widgetGroup.find(name);
 	}
-	m_widgetGroup.insert(std::make_pair(name, m_w));
+	m_widgetGroup.insert(std::make_pair(name, *m_w));
+	m_w = nullptr;
+	delete m_w;
 }
 
 void WidgetManager::Update(sf::RenderWindow& window) {

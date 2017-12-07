@@ -6,6 +6,7 @@
 #include "Widget.h"
 #include "WidgetManager.h"
 #include "Slider.h"
+#include <functional>
 
 enum Tool {
 	NONE,
@@ -23,7 +24,8 @@ enum Colors {
 	GREEN,
 	PINK,
 	CYAN,
-	YELLOW
+	YELLOW,
+	COLOR_PICKER
 };
 
 class Paint
@@ -32,24 +34,40 @@ public:
 	 Paint();
 	~Paint();
 public:
-	void Initialize (Data* data, sf::Image& img);
+	void Initialize (Data* data);
 	void Run(sf::RenderWindow& window);
 private:
 	void CheckTool();
-	void CheckColor();
+	void CheckColor(sf::RenderWindow& window);
+
 	void Draw(sf::RenderWindow& window, const sf::IntRect& bounds, int width, int height, const sf::Color& color);
 	void PaintStuff(sf::RenderWindow& window);
 	void SelectColor();
+
 	inline void Clear();
 	inline void SetBgColor(const sf::Color& color);
+
+	void RunWindow(sf::RenderWindow& window, void(Paint::*run)());
+
+	void ColorPickerWindow();
+	void ToolSizeWindow();
 private:
-	Data*         m_data;
-	Tool          m_tool;
-	WidgetManager m_toolIcons;
-	Colors        m_selectedColor;
-	WidgetManager m_colorIcons;
-	sf::Color     m_paintColor;
-	Slider        m_brushSlider;
+	Data*              m_data;
+	Tool               m_tool;
+	WidgetManager      m_toolIcons;
+	Colors             m_selectedColor;
+	WidgetManager      m_colorIcons;
+	sf::Color          m_paintColor;
+	Slider             m_brushSlider;
+	sf::RectangleShape m_currentColor;
+
+	sf::RenderWindow   m_colorPickerWindow;
+	sf::RenderWindow   m_toolSizeWindow;
+	sf::Color          m_pickedColor;
+
+	// test
+
+	sf::RectangleShape test;
 
 	std::string   m_colorsNames[8] = { 
 		"BLACK",
