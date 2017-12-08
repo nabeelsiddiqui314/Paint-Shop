@@ -4,7 +4,8 @@
 
 Paint::Paint() : 
 	m_toolIcons  (SELECT), 
-	m_colorIcons (SELECT)
+	m_colorIcons (SELECT),
+	m_tweakIcons (INFINITE)
 {
 
 }
@@ -14,7 +15,6 @@ void Paint::Initialize(Data* data) {
 	m_data          = data;
 	m_tool          = NONE;
 	m_selectedColor = BLACK;
-	m_pickedColor = sf::Color(BLACK);
 
 	m_toolIcons.Add("brush", sf::Vector2f(20, 20), sf::Vector2f(20, 20), "icons.png", sf::IntRect(0, 0, 20, 20),
 		sf::IntRect(0, 20, 20, 20), sf::IntRect(0, 40, 20, 20));
@@ -26,7 +26,7 @@ void Paint::Initialize(Data* data) {
 		sf::IntRect(20, 20, 20, 20), sf::IntRect(20, 40, 20, 20));
 
 
-	m_colorIcons.Add("colorPicker", sf::Vector2f(50, 55), sf::Vector2f(900 + (8 - 4) * 30, 20), "colorEditor.png", sf::IntRect(4, 5, 307, 309),
+	m_tweakIcons.Add("colorPicker", sf::Vector2f(50, 55), sf::Vector2f(900 + (8 - 4) * 30, 20), "colorEditor.png", sf::IntRect(4, 5, 307, 309),
 		sf::IntRect(6, 7, 305, 307), sf::IntRect(8, 9, 303, 305));
 
 	for (unsigned int i = 0; i < 8; i++) {
@@ -45,10 +45,6 @@ void Paint::Initialize(Data* data) {
 	m_currentColor.setFillColor(sf::Color::Black);
 
 	m_brushSlider.AddSlider(sf::Vector2f(120, 30), 10, 200, 35);
-
-	test.setPosition(20, 20);
-	test.setSize(sf::Vector2f(20, 20));
-	test.setFillColor(sf::Color::Red);
 }
 
 void Paint::CheckTool() {
@@ -90,7 +86,6 @@ void Paint::CheckColor(sf::RenderWindow& window) {
 		m_paintColor = sf::Color::Yellow;
 		break;
 	case COLOR_PICKER:
-		m_paintColor = m_pickedColor;
 		break;
 	}
 	m_currentColor.setFillColor(m_paintColor);
@@ -126,19 +121,19 @@ void Paint::PaintStuff(sf::RenderWindow& window) {
 }
 
 void Paint::SelectColor() {
+	if (m_tweakIcons.Get("colorPicker").IsClicked()) {
+		m_selectedColor = COLOR_PICKER;
+		RunWindow(m_colorPickerWindow, sf::Vector2u(550, 400), "Color Picker", &Paint::ColorPickerWindow);
+	}
 	for (unsigned int i = 0; i < 8; i++) {
-		if (m_colorIcons.Get("colorPicker").IsClicked()) {
-			m_selectedColor = COLOR_PICKER;
-			RunWindow(m_colorPickerWindow, &Paint::ColorPickerWindow);
-		}
-		else if (m_colorIcons.Get(m_colorsNames[i]).IsClicked()) {
+		if (m_colorIcons.Get(m_colorsNames[i]).IsClicked()) {
 			m_selectedColor = (Colors)i;
 		}
 	}
 }
 
-void Paint::RunWindow(sf::RenderWindow& window, void (Paint::*run)()) {
-	window.create(sf::VideoMode(500, 400), "ey");
+void Paint::RunWindow(sf::RenderWindow& window, sf::Vector2u windowSize, std::string title, void(Paint::*run)()) {
+	window.create(sf::VideoMode(windowSize.x, windowSize.y), title);
 	while (window.isOpen()) {
 		sf::Event evnt;
 		while (window.pollEvent(evnt)) {
@@ -154,8 +149,7 @@ void Paint::RunWindow(sf::RenderWindow& window, void (Paint::*run)()) {
 }
 
 void Paint::ColorPickerWindow() {
-	test.move(1, 1);
-	m_colorPickerWindow.draw(test);
+
 }
 
 void Paint::ToolSizeWindow() {
@@ -174,12 +168,13 @@ inline void Paint::Clear() {
 
 void Paint::Run(sf::RenderWindow& window) {
 	Clear();
-	CheckTool();
-	CheckColor(window);
-	PaintStuff(window);
+	m_tweakIcons.Update(window);
 	m_toolIcons.Update(window);
 	m_colorIcons.Update(window);
 	SelectColor();
+	CheckColor(window);
+	CheckTool();
+	PaintStuff(window);
 }
 
 
