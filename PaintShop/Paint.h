@@ -37,17 +37,20 @@ public:
 	void Initialize (Data* data);
 	void Run(sf::RenderWindow& window);
 private:
-	void CheckTool();
-	void CheckColor(sf::RenderWindow& window);
+	inline void init_toolIcons();
+	inline void init_colorIcons();
+	inline void init_tweakIcons();
+	inline void init_randomStuff();
 
 	void Draw(sf::RenderWindow& window, const sf::IntRect& bounds, int width, int height, const sf::Color& color);
-	void PaintStuff(sf::RenderWindow& window);
-	void SelectColor();
-
-	inline void Clear();
+	void RunWindow(sf::RenderWindow& window, sf::Vector2u windowSize, std::string title, void(Paint::*run)());
 	inline void SetBgColor(const sf::Color& color);
 
-	void RunWindow(sf::RenderWindow& window, sf::Vector2u windowSize, std::string title, void(Paint::*run)());
+	inline void Clear();
+	void SelectClickedColor();
+	void SelectClickedTools();
+	void ChangeColor();
+	void PaintStuff(sf::RenderWindow& window);
 
 	void ColorPickerWindow();
 	void ToolSizeWindow();
@@ -62,7 +65,7 @@ private:
 	sf::Color          m_paintColor;
 
 	Slider             m_brushSlider;
-	sf::RectangleShape m_currentColor;
+	sf::RectangleShape m_currentColorDisplay;
 
 	sf::RenderWindow   m_colorPickerWindow;
 	sf::RenderWindow   m_toolSizeWindow;
