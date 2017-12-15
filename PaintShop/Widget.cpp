@@ -3,7 +3,7 @@
 
 
 Widget::Widget() {
-
+	
 }
 
 void Widget::Init(const sf::Vector2f& size, const sf::Vector2f& pos, const std::string filepath, const sf::IntRect& crop,

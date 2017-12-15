@@ -2,7 +2,7 @@
 #include "Application.h"
 
 
-Application::Application() {
+Application::Application() : m_paint(m_window) {
 	m_data = new Data();
 	m_data->canvas = &m_canvas;
 	if (!m_files.Parse(m_data)) {
@@ -41,7 +41,7 @@ void Application::Run() {
 		m_window.clear(sf::Color(58, 57, 68));   /////////////////////////////////////
 
 		UpdateCanvas();
-		m_paint.Run(m_window);
+		m_paint.Run();
 
 		m_window.display(); /////////////////////////////////////
 	}

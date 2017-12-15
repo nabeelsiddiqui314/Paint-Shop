@@ -2,10 +2,11 @@
 #include "Paint.h"
 
 
-Paint::Paint() : 
+Paint::Paint(sf::RenderWindow& window) : 
 	m_toolIcons  (SELECT), 
 	m_colorIcons (SELECT),
-	m_tweakIcons (INFINITE)
+	m_tweakIcons (INFINITE),
+	m_mainWindow (window)
 {
 
 }
@@ -14,6 +15,7 @@ Paint::Paint() :
 // inits ------------------------------------------
 
 inline void Paint::init_toolIcons() {
+	m_tool = NONE;
 	m_toolIcons.Add("brush", sf::Vector2f(20, 20), sf::Vector2f(20, 20), "icons.png", sf::IntRect(0, 0, 20, 20),
 		sf::IntRect(0, 20, 20, 20), sf::IntRect(0, 40, 20, 20));
 
@@ -25,9 +27,6 @@ inline void Paint::init_toolIcons() {
 }
 
 inline void Paint::init_colorIcons() {
-	m_tweakIcons.Add("colorPicker", sf::Vector2f(50, 55), sf::Vector2f(900 + (8 - 4) * 30, 20), "colorEditor.png", sf::IntRect(4, 5, 307, 309),
-		sf::IntRect(6, 7, 305, 307), sf::IntRect(8, 9, 303, 305));
-
 	for (unsigned int i = 0; i < 8; i++) {
 		if (i < 4) {
 			m_colorIcons.Add(m_colorsNames[i], sf::Vector2f(20, 20), sf::Vector2f(900 + i * 30, 20), "ColorIcons.png", sf::IntRect(i * 20, 0, 20, 20),
@@ -41,7 +40,8 @@ inline void Paint::init_colorIcons() {
 }
 
 inline void Paint::init_tweakIcons() {
-	
+	m_tweakIcons.Add("colorPicker", sf::Vector2f(50, 55), sf::Vector2f(900 + (8 - 4) * 30, 20), "colorEditor.png", sf::IntRect(4, 5, 307, 309),
+		sf::IntRect(6, 7, 305, 307), sf::IntRect(8, 9, 303, 305));
 }
 
 inline void Paint::init_randomStuff() {
@@ -50,6 +50,12 @@ inline void Paint::init_randomStuff() {
 	m_currentColorDisplay.setFillColor(sf::Color::Black);
 
 	m_brushSlider.AddSlider(sf::Vector2f(120, 30), 10, 200, 35);
+
+	m_colorWheel.setSize(sf::Vector2f(350, 350));
+	m_colorWheel.setPosition(245, 80);
+	m_colorWheel_img.loadFromFile("./assets/color_wheel.png");
+	m_colorWheel_tex.loadFromImage(m_colorWheel_img);
+	m_colorWheel.setTexture(&m_colorWheel_tex);
 }
 
 // end_inits --------------------------------------
@@ -113,11 +119,14 @@ void Paint::SelectClickedTools() {
 	if (m_toolIcons.Get("pen").IsClicked()) {
 		m_tool = PEN;
 	}
-	if (m_toolIcons.Get("brush").IsClicked()) {
+	else if (m_toolIcons.Get("brush").IsClicked()) {
 		m_tool = BRUSH;
 	}
-	if (m_toolIcons.Get("eraser").IsClicked()) {
+	else if (m_toolIcons.Get("eraser").IsClicked()) {
 		m_tool = ERASER;
+	}
+	else {
+		m_tool = NONE;
 	}
 }
 
@@ -152,27 +161,56 @@ void Paint::ChangeColor() {
 	}
 }
 
-void Paint::PaintStuff(sf::RenderWindow& window) {
+void Paint::Launch_colorPicker() {
+	if (m_tweakIcons.Get("colorPicker").IsClicked()) {
+		this->RunWindow(m_colorPickerWindow, sf::Vector2u(600, 500), "Color Picker", &Paint::ColorPickerWindow);
+	}
+}
+
+void Paint::Launch_toolSize() {
+
+}
+
+void Paint::PaintStuff() {
 	switch (m_tool) {
 	case BRUSH:
-		Draw(window, m_data->canvas_bounds, m_brushSlider.GetValue(), m_brushSlider.GetValue(), m_paintColor);
+		Draw(m_mainWindow, m_data->canvas_bounds, m_brushSlider.GetValue(), m_brushSlider.GetValue(), m_paintColor);
 		break;
 	case PEN:
-		Draw(window, m_data->canvas_bounds, m_brushSlider.GetValue() / 2, m_brushSlider.GetValue(), m_paintColor);
+		Draw(m_mainWindow, m_data->canvas_bounds, m_brushSlider.GetValue() / 2, m_brushSlider.GetValue(), m_paintColor);
 		break;
 	case ERASER:
-		Draw(window, m_data->canvas_bounds, m_brushSlider.GetValue(), m_brushSlider.GetValue(), m_data->backroundColor);
+		Draw(m_mainWindow, m_data->canvas_bounds, m_brushSlider.GetValue(), m_brushSlider.GetValue(), m_data->backroundColor);
 		break;
 	default:
 		break;
 	}
 }
 
+inline void Paint::UpdateColorDisplay() {
+	m_currentColorDisplay.setPosition(835, 20);
+	m_currentColorDisplay.setFillColor(m_paintColor);
+	m_mainWindow.draw(m_currentColorDisplay);
+}
+
 // end_per-frame-functions ---------------------------------
 
 
 void Paint::ColorPickerWindow() {
+	m_colorPickerWindow.clear(sf::Color::White);
+	m_colorPickerWindow.draw(m_colorWheel);
 
+	m_currentColorDisplay.setPosition(0, 0);
+	m_colorPickerWindow.draw(m_currentColorDisplay);
+
+	int x = m_colorWheel.getPosition().x;
+	int y = m_colorWheel.getPosition().y;
+	int w = x + m_colorWheel.getGlobalBounds().width;
+	int h = y + m_colorWheel.getGlobalBounds().height;
+
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && Interface::IsMouseInBounds(m_colorPickerWindow, sf::IntRect(x, y, w, h))) {
+		
+	}
 }
 
 void Paint::ToolSizeWindow() {
@@ -195,16 +233,17 @@ void Paint::Initialize(Data* data) {
 	init_randomStuff();
 }
 
-void Paint::Run(sf::RenderWindow& window) {
+void Paint::Run() {
 	Clear();
-	m_tweakIcons.Update(window);
-	m_toolIcons.Update(window);
-	m_colorIcons.Update(window);
+	m_tweakIcons.Update(m_mainWindow);
+	m_toolIcons.Update(m_mainWindow);
+	m_colorIcons.Update(m_mainWindow);
 	SelectClickedColor();
 	SelectClickedTools();
-	PaintStuff(window);
-	m_currentColorDisplay.setFillColor(m_paintColor);
-	window.draw(m_currentColorDisplay);
+	PaintStuff();
+	UpdateColorDisplay();
+	Launch_colorPicker();
+	//Launch_toolSize();
 }
 
 // end_publically-used -----------------------------

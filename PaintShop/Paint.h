@@ -31,11 +31,11 @@ enum Colors {
 class Paint
 {
 public:
-	 Paint();
+	 Paint(sf::RenderWindow& window);
 	~Paint();
 public:
 	void Initialize (Data* data);
-	void Run(sf::RenderWindow& window);
+	void Run();
 private:
 	inline void init_toolIcons();
 	inline void init_colorIcons();
@@ -50,7 +50,10 @@ private:
 	void SelectClickedColor();
 	void SelectClickedTools();
 	void ChangeColor();
-	void PaintStuff(sf::RenderWindow& window);
+	void Launch_colorPicker();
+	void Launch_toolSize();
+	void PaintStuff();
+	inline void UpdateColorDisplay();
 
 	void ColorPickerWindow();
 	void ToolSizeWindow();
@@ -58,17 +61,22 @@ private:
 	Data*              m_data;
 	Tool               m_tool;
 
-	WidgetManager      m_toolIcons;
-	WidgetManager      m_tweakIcons;
-	WidgetManager      m_colorIcons;
-	Colors             m_selectedColor;
-	sf::Color          m_paintColor;
+	WidgetManager       m_toolIcons;
+	WidgetManager       m_tweakIcons;
+	WidgetManager       m_colorIcons;
+	Colors              m_selectedColor;
+	sf::Color           m_paintColor;
 
-	Slider             m_brushSlider;
-	sf::RectangleShape m_currentColorDisplay;
+	Slider              m_brushSlider;
+	sf::RectangleShape  m_currentColorDisplay;
 
-	sf::RenderWindow   m_colorPickerWindow;
-	sf::RenderWindow   m_toolSizeWindow;
+	sf::RenderWindow&   m_mainWindow;
+	sf::RenderWindow    m_colorPickerWindow;
+	sf::RenderWindow    m_toolSizeWindow;
+
+	sf::RectangleShape  m_colorWheel;
+	sf::Texture         m_colorWheel_tex;
+	sf::Image           m_colorWheel_img;
 
 	std::string   m_colorsNames[8] = { 
 		"BLACK",
