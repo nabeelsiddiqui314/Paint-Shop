@@ -3,10 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "Data.h"
 #include "Interface.h"
-#include "Widget.h"
-#include "WidgetManager.h"
-#include "Slider.h"
-#include <functional>
+#include "Var_structs.h"
 
 enum Tool {
 	NONE,
@@ -50,8 +47,7 @@ private:
 	void SelectClickedColor();
 	void SelectClickedTools();
 	void ChangeColor();
-	void Launch_colorPicker();
-	void Launch_toolSize();
+	void LaunchWindows();
 	void PaintStuff();
 	inline void UpdateColorDisplay();
 
@@ -60,23 +56,17 @@ private:
 private:
 	Data*              m_data;
 	Tool               m_tool;
-
-	WidgetManager       m_toolIcons;
-	WidgetManager       m_tweakIcons;
-	WidgetManager       m_colorIcons;
+	
 	Colors              m_selectedColor;
 	sf::Color           m_paintColor;
 
 	Slider              m_brushSlider;
 	sf::RectangleShape  m_currentColorDisplay;
 
-	sf::RenderWindow&   m_mainWindow;
-	sf::RenderWindow    m_colorPickerWindow;
-	sf::RenderWindow    m_toolSizeWindow;
-
-	sf::RectangleShape  m_colorWheel;
-	sf::Texture         m_colorWheel_tex;
-	sf::Image           m_colorWheel_img;
+	Windows      m_windows;
+	WidgetGroups m_widgets;
+	RGB          m_cpRGB;
+	ColorWheel   m_colorWheel;
 
 	std::string   m_colorsNames[8] = { 
 		"BLACK",
