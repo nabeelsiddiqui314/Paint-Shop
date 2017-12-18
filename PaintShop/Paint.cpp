@@ -3,7 +3,8 @@
 
 
 Paint::Paint(sf::RenderWindow& window) : 
-	m_windows (window)
+	m_windows (window),
+	m_Ok_cancel_cp(sf::Vector2f(50, 450), sf::Vector2f(150, 450))
 {
 
 }
@@ -106,10 +107,13 @@ inline void Paint::Clear() {
 void Paint::SelectClickedColor() {
 	for (unsigned int i = 0; i < 8; i++) {
 		if (m_widgets.colorIcons.Get(m_colorsNames[i]).IsClicked()) {
+			m_colorPicked = false;
 			m_selectedColor = (Colors)i;
 		}
 	}
-	ChangeColor();
+	if (!m_colorPicked) {
+		ChangeColor();
+	}
 }
 
 void Paint::SelectClickedTools() {
@@ -160,6 +164,7 @@ void Paint::ChangeColor() {
 
 void Paint::LaunchWindows() {
 	if (m_widgets.tweakIcons.Get("colorPicker").IsClicked()) {
+		m_widgets.colorIcons.DeselectAll();
 		this->RunWindow(m_windows.colorPickerWindow, sf::Vector2u(600, 500), "Color Picker", &Paint::ColorPickerWindow);
 	}
 }
@@ -191,8 +196,16 @@ inline void Paint::UpdateColorDisplay() {
 
 
 void Paint::ColorPickerWindow() {
+	if (m_Ok_cancel_cp.ok_cancel.Get("ok").IsClicked()) {
+		m_colorPicked = true;
+		m_windows.colorPickerWindow.close();
+	}
+	if (m_Ok_cancel_cp.ok_cancel.Get("cancel").IsClicked()) {
+		m_windows.colorPickerWindow.close();
+	}
 	m_windows.colorPickerWindow.clear(sf::Color::White);
 	m_windows.colorPickerWindow.draw(m_colorWheel.rect);
+	m_Ok_cancel_cp.Update(m_windows.colorPickerWindow);
 
 	m_currentColorDisplay.setSize(sf::Vector2f(180, 150));
 	m_currentColorDisplay.setPosition(25, 90);
@@ -204,11 +217,13 @@ void Paint::ColorPickerWindow() {
 	int h = y + m_colorWheel.rect.getGlobalBounds().height;
 
 	m_cpRGB.setRGB(m_currentColorDisplay.getFillColor());
-	m_cpRGB.rgb.setPosition(20, 400);
+	m_cpRGB.rgb.setPosition(65, 250);
 	m_windows.colorPickerWindow.draw(m_cpRGB.rgb);
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && Interface::IsMouseInBounds(m_windows.colorPickerWindow, sf::IntRect(x, y, w, h))) {
-		m_currentColorDisplay.setFillColor(m_colorWheel.img.getPixel(sf::Mouse::getPosition(m_windows.colorPickerWindow).x - x, sf::Mouse::getPosition(m_windows.colorPickerWindow).y - y));
+		sf::Color pixelColor = m_colorWheel.img.getPixel(sf::Mouse::getPosition(m_windows.colorPickerWindow).x - x, sf::Mouse::getPosition(m_windows.colorPickerWindow).y - y);
+		m_paintColor = pixelColor;
+		m_currentColorDisplay.setFillColor(pixelColor);
 	}
 }
 
@@ -242,7 +257,6 @@ void Paint::Run() {
 	PaintStuff();
 	UpdateColorDisplay();
 	LaunchWindows();
-	//Launch_toolSize();
 }
 
 // end_publically-used -----------------------------

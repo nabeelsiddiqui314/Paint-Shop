@@ -24,7 +24,7 @@ void Widget::Init(const sf::Vector2f& size, const sf::Vector2f& pos, const std::
 void Widget::CropWidget(sf::RenderWindow& window) {
 	switch (m_type) {
 	case SELECT:
-		if (Interface::IsClicked(window, *this, m_clock, m_delaytime, 200)) {
+		if (Interface::IsClicked(window, *this, m_clock, m_delaytime, 0)) {
 			m_clicked = true;
 			this->setTextureRect(m_clickRect);
 		}

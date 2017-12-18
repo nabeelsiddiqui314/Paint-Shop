@@ -43,6 +43,12 @@ void WidgetManager::Update(sf::RenderWindow& window) {
 	}
 }
 
+void WidgetManager::DeselectAll() {
+	for (auto& all : m_widgetGroup) {
+		all.second.Deselect();
+	}
+}
+
 const Widget& WidgetManager::Get(const std::string name) const {
 	std::unordered_map <std::string, Widget>::const_iterator found = m_widgetGroup.find(name);
 	if (found == m_widgetGroup.end()) {

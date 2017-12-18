@@ -37,3 +37,14 @@ struct ColorWheel {
 	sf::Texture        tex;
 	sf::Image          img;
 };
+
+struct Ok_Cancel {
+	WidgetManager ok_cancel = WidgetManager(INFINITE);
+	Ok_Cancel(sf::Vector2f PosOk, sf::Vector2f PosCancel) {
+		ok_cancel.Add("ok",     sf::Vector2f(50, 20), PosOk,     "ok_cancel.png", sf::IntRect(  0, 0, 104, 40), sf::IntRect(  0, 45, 102, 38), sf::IntRect(  0, 45, 102, 38));
+		ok_cancel.Add("cancel", sf::Vector2f(50, 20), PosCancel, "ok_cancel.png", sf::IntRect(126, 0, 104, 40), sf::IntRect(126, 45, 102, 38), sf::IntRect(126, 45, 102, 38));
+	}
+	void Update(sf::RenderWindow& window) {
+		ok_cancel.Update(window);
+	}
+};

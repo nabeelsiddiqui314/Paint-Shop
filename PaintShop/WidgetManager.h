@@ -16,6 +16,7 @@ public:
 		                                const sf::IntRect&  hovered, const sf::IntRect&  clicked);
 	void Update      (sf::RenderWindow& window);
 	const Widget& Get(const std::string name) const;
+	void DeselectAll();
 private:
 	Type                                     m_type;
 	std::unordered_map <std::string, Widget> m_widgetGroup;

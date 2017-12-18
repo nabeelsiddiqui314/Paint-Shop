@@ -67,6 +67,8 @@ private:
 	WidgetGroups m_widgets;
 	RGB          m_cpRGB;
 	ColorWheel   m_colorWheel;
+	Ok_Cancel    m_Ok_cancel_cp;
+	bool         m_colorPicked = false;
 
 	std::string   m_colorsNames[8] = { 
 		"BLACK",
