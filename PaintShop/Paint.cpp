@@ -157,14 +157,12 @@ void Paint::ChangeColor() {
 	case YELLOW:
 		m_paintColor = sf::Color::Yellow;
 		break;
-	case COLOR_PICKER:
-		break;
 	}
 }
 
 void Paint::LaunchWindows() {
 	if (m_widgets.tweakIcons.Get("colorPicker").IsClicked()) {
-		m_widgets.colorIcons.DeselectAll();
+		m_isColorSet = false;
 		this->RunWindow(m_windows.colorPickerWindow, sf::Vector2u(600, 500), "Color Picker", &Paint::ColorPickerWindow);
 	}
 }
@@ -196,12 +194,9 @@ inline void Paint::UpdateColorDisplay() {
 
 
 void Paint::ColorPickerWindow() {
-	if (m_Ok_cancel_cp.ok_cancel.Get("ok").IsClicked()) {
-		m_colorPicked = true;
-		m_windows.colorPickerWindow.close();
-	}
-	if (m_Ok_cancel_cp.ok_cancel.Get("cancel").IsClicked()) {
-		m_windows.colorPickerWindow.close();
+	if (!m_isColorSet) {
+		m_pixelColor = m_paintColor;
+		m_isColorSet = true;
 	}
 	m_windows.colorPickerWindow.clear(sf::Color::White);
 	m_windows.colorPickerWindow.draw(m_colorWheel.rect);
@@ -221,9 +216,17 @@ void Paint::ColorPickerWindow() {
 	m_windows.colorPickerWindow.draw(m_cpRGB.rgb);
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && Interface::IsMouseInBounds(m_windows.colorPickerWindow, sf::IntRect(x, y, w, h))) {
-		sf::Color pixelColor = m_colorWheel.img.getPixel(sf::Mouse::getPosition(m_windows.colorPickerWindow).x - x, sf::Mouse::getPosition(m_windows.colorPickerWindow).y - y);
-		m_paintColor = pixelColor;
-		m_currentColorDisplay.setFillColor(pixelColor);
+		m_pixelColor = m_colorWheel.img.getPixel(sf::Mouse::getPosition(m_windows.colorPickerWindow).x - x, sf::Mouse::getPosition(m_windows.colorPickerWindow).y - y);
+		m_currentColorDisplay.setFillColor(m_pixelColor);
+	}
+	if (m_Ok_cancel_cp.ok_cancel.Get("ok").IsClicked()) {
+		m_widgets.colorIcons.DeselectAll();
+		m_colorPicked = true;
+		m_paintColor = m_pixelColor;
+		m_windows.colorPickerWindow.close();
+	}
+	if (m_Ok_cancel_cp.ok_cancel.Get("cancel").IsClicked()) {
+		m_windows.colorPickerWindow.close();
 	}
 }
 

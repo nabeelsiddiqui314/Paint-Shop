@@ -21,8 +21,7 @@ enum Colors {
 	GREEN,
 	PINK,
 	CYAN,
-	YELLOW,
-	COLOR_PICKER
+	YELLOW
 };
 
 class Paint
@@ -69,6 +68,8 @@ private:
 	ColorWheel   m_colorWheel;
 	Ok_Cancel    m_Ok_cancel_cp;
 	bool         m_colorPicked = false;
+	sf::Color m_pixelColor;
+	bool      m_isColorSet = false;
 
 	std::string   m_colorsNames[8] = { 
 		"BLACK",
