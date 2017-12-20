@@ -13,8 +13,8 @@ bool Interface::IsMouseInBounds(sf::RenderWindow& window) {
 }
 
 bool Interface::IsMouseInBounds(sf::RenderWindow& window, sf::IntRect bounds) {
-	return sf::Mouse::getPosition(window).x > bounds.left && sf::Mouse::getPosition(window).x < bounds.width &&
-		   sf::Mouse::getPosition(window).y > bounds.top  && sf::Mouse::getPosition(window).y < bounds.height;
+	return sf::Mouse::getPosition(window).x > bounds.left && sf::Mouse::getPosition(window).x < bounds.width  + bounds.left &&
+		   sf::Mouse::getPosition(window).y > bounds.top  && sf::Mouse::getPosition(window).y < bounds.height + bounds.top;
 }
 
 bool Interface::IsHovered(sf::RenderWindow& window, sf::RectangleShape& button) {

@@ -43,7 +43,10 @@ inline void Paint::init_tweakIcons() {
 }
 
 inline void Paint::init_pointers() {
-	
+	m_pointers.Add("brush", "brush.png", sf::Vector2f(40, 40));
+	m_pointers.Add("pen", "pen.png", sf::Vector2f(40, 40));
+	m_pointers.Add("eraser", "eraser.png", sf::Vector2f(40, 40));
+	m_pointers.Add("colorPicker", "color_picker.png", sf::Vector2f(40, 40));
 }
 
 inline void Paint::init_randomStuff() {
@@ -66,9 +69,10 @@ inline void Paint::init_randomStuff() {
 // re-usables -------------------------------------------------------------------------------------------------------------------
 
 void Paint::Draw(sf::RenderWindow& window, const sf::IntRect& bounds, int width, int height, const sf::Color& color) {
-	sf::IntRect DrawBounds = { bounds.left + width + 1, bounds.top + height + 1, bounds.width + bounds.left - width - 1, bounds.height + bounds.top - height - 1 };
+	sf::IntRect DrawBounds = { bounds.left + width, bounds.top + height, bounds.width - width*2, bounds.height - height*2};
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && Interface::IsMouseInBounds(window, DrawBounds)) {
+		std::cout << "in";
 		for (int x = sf::Mouse::getPosition(window).x - width; x < sf::Mouse::getPosition(window).x + width; x++) {
 			for (int y = sf::Mouse::getPosition(window).y - height; y < sf::Mouse::getPosition(window).y + height; y++) {
 				m_data->canvas->setPixel(x - m_data->canvas_bounds.left, y - m_data->canvas_bounds.top, color);
@@ -195,7 +199,23 @@ inline void Paint::UpdateColorDisplay() {
 }
 
 void Paint::SetPointer() {
-	
+	if (Interface::IsMouseInBounds(m_windows.mainWindow, sf::IntRect(m_data->canvas_bounds))) {
+		if (m_widgets.toolIcons.Get("brush").IsClicked()) {
+			m_pointers.SetPointer("brush");
+		}
+		else if (m_widgets.toolIcons.Get("pen").IsClicked()) {
+			m_pointers.SetPointer("pen");
+		}
+		else if (m_widgets.toolIcons.Get("eraser").IsClicked()) {
+			m_pointers.SetPointer("eraser");
+		}
+		else {
+			m_pointers.DontDisplay();
+		}
+	}
+	else {
+		m_pointers.DontDisplay();
+	}
 }
 
 // end_per-frame-functions ---------------------------------
@@ -264,6 +284,7 @@ void Paint::Run() {
 	m_widgets.tweakIcons.Update(m_windows.mainWindow);
 	m_widgets.toolIcons.Update(m_windows.mainWindow);
 	m_widgets.colorIcons.Update(m_windows.mainWindow);
+	m_pointers.Update(m_windows.mainWindow);
 	SelectClickedColor();
 	SelectClickedTools();
 	LaunchWindows();
