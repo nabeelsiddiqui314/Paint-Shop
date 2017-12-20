@@ -8,7 +8,7 @@ WidgetManager::WidgetManager(const Type& type) : m_type(type) {
 
 
 void WidgetManager::Add(std::string name, const sf::Vector2f& size, const sf::Vector2f& pos, const std::string filepath, const sf::IntRect& crop,
-	const  sf::IntRect&  hovered, const sf::IntRect& clicked) {
+	const sf::IntRect& hovered, const sf::IntRect& clicked) {
 	m_w.Init(size, pos, filepath, crop, hovered, clicked, m_type);
 
 	std::unordered_map <std::string, Widget>::const_iterator found = m_widgetGroup.find(name);

@@ -4,6 +4,7 @@
 #include "Data.h"
 #include "Interface.h"
 #include "Var_structs.h"
+#include "PointerManager.h"
 
 enum Tool {
 	NONE,
@@ -36,6 +37,7 @@ private:
 	inline void init_toolIcons();
 	inline void init_colorIcons();
 	inline void init_tweakIcons();
+	inline void init_pointers();
 	inline void init_randomStuff();
 
 	void Draw(sf::RenderWindow& window, const sf::IntRect& bounds, int width, int height, const sf::Color& color);
@@ -49,6 +51,7 @@ private:
 	void LaunchWindows();
 	void PaintStuff();
 	inline void UpdateColorDisplay();
+	void SetPointer();
 
 	void ColorPickerWindow();
 	void ToolSizeWindow();
@@ -61,15 +64,17 @@ private:
 
 	Slider              m_brushSlider;
 	sf::RectangleShape  m_currentColorDisplay;
+	PointerManager      m_pointers;
 
 	Windows      m_windows;
 	WidgetGroups m_widgets;
 	RGB          m_cpRGB;
 	ColorWheel   m_colorWheel;
 	Ok_Cancel    m_Ok_cancel_cp;
+	
+	sf::Color    m_pixelColor;
+	bool         m_isColorSet  = false;
 	bool         m_colorPicked = false;
-	sf::Color m_pixelColor;
-	bool      m_isColorSet = false;
 
 	std::string   m_colorsNames[8] = { 
 		"BLACK",

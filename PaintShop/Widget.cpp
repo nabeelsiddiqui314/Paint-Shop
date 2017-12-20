@@ -16,7 +16,7 @@ void Widget::Init(const sf::Vector2f& size, const sf::Vector2f& pos, const std::
 	this->setSize     (size);
 	this->setPosition (pos);
 
-	m_icon.loadFromFile  ("./assets/" + filepath);
+	m_icon.loadFromFile  ("./assets/widgets/" + filepath);
 	this->setTexture     (&m_icon);
 	this->setTextureRect (crop);
 }

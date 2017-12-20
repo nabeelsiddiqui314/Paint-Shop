@@ -3,6 +3,7 @@
 #include "WidgetManager.h"
 #include "Slider.h"
 #include <string>
+#include <vector>
 
 struct Windows {
 	sf::RenderWindow& mainWindow;

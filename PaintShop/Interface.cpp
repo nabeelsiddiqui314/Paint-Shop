@@ -34,11 +34,11 @@ bool Interface::IsClicked(sf::RenderWindow& window, sf::RectangleShape& button, 
 void Interface::SetPointer(sf::RenderWindow& window, sf::RectangleShape& pointer, bool hideMouse) {
 	window.setMouseCursorVisible(!hideMouse);
 
-	if (IsMouseInBounds(window)) {
-		pointer.setOrigin(pointer.getGlobalBounds().width / 2, pointer.getGlobalBounds().height / 2);
-		sf::Vector2f mousePos(sf::Mouse::getPosition(window));
-		pointer.setPosition(mousePos);
-	}
+	pointer.setOrigin(pointer.getGlobalBounds().width / 2, pointer.getGlobalBounds().height / 2);
+	sf::Vector2f mousePos(sf::Mouse::getPosition(window));
+	pointer.setPosition(mousePos);
+
+	window.draw(pointer);
 }
 
 

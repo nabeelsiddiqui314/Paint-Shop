@@ -6,7 +6,7 @@ Paint::Paint(sf::RenderWindow& window) :
 	m_windows (window),
 	m_Ok_cancel_cp(sf::Vector2f(50, 450), sf::Vector2f(150, 450))
 {
-
+	
 }
 
 
@@ -40,6 +40,10 @@ inline void Paint::init_colorIcons() {
 inline void Paint::init_tweakIcons() {
 	m_widgets.tweakIcons.Add("colorPicker", sf::Vector2f(50, 55), sf::Vector2f(900 + (8 - 4) * 30, 20), "colorEditor.png", sf::IntRect(4, 5, 307, 309),
 		sf::IntRect(6, 7, 305, 307), sf::IntRect(8, 9, 303, 305));
+}
+
+inline void Paint::init_pointers() {
+	
 }
 
 inline void Paint::init_randomStuff() {
@@ -190,6 +194,10 @@ inline void Paint::UpdateColorDisplay() {
 	m_windows.mainWindow.draw(m_currentColorDisplay);
 }
 
+void Paint::SetPointer() {
+	
+}
+
 // end_per-frame-functions ---------------------------------
 
 
@@ -246,6 +254,7 @@ void Paint::Initialize(Data* data) {
 	init_toolIcons();
 	init_colorIcons();
 	init_tweakIcons();
+	init_pointers();
 
 	init_randomStuff();
 }
@@ -257,9 +266,10 @@ void Paint::Run() {
 	m_widgets.colorIcons.Update(m_windows.mainWindow);
 	SelectClickedColor();
 	SelectClickedTools();
+	LaunchWindows();
 	PaintStuff();
 	UpdateColorDisplay();
-	LaunchWindows();
+	SetPointer();
 }
 
 // end_publically-used -----------------------------
