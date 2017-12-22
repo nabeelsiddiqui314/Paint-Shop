@@ -39,6 +39,7 @@ private:
 	inline void init_tweakIcons();
 	inline void init_pointers();
 	inline void init_randomStuff();
+	inline void init_infoBar();
 
 	void Draw(sf::RenderWindow& window, const sf::IntRect& bounds, int width, int height, const sf::Color& color);
 	void RunWindow(sf::RenderWindow& window, sf::Vector2u windowSize, std::string title, void(Paint::*run)());
@@ -52,6 +53,7 @@ private:
 	void PaintStuff();
 	inline void UpdateColorDisplay();
 	void SetPointer();
+	void UpdateInfoBar();
 
 	void ColorPickerWindow();
 	void ToolSizeWindow();
@@ -71,10 +73,10 @@ private:
 	RGB          m_cpRGB;
 	ColorWheel   m_colorWheel;
 	Ok_Cancel    m_Ok_cancel_cp;
+	InfoBar      m_infoBar;
+	BoolSwitches m_boolSwitches;
 	
 	sf::Color    m_pixelColor;
-	bool         m_isColorSet  = false;
-	bool         m_colorPicked = false;
 
 	std::string   m_colorsNames[8] = { 
 		"BLACK",

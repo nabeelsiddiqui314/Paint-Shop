@@ -49,3 +49,18 @@ struct Ok_Cancel {
 		ok_cancel.Update(window);
 	}
 };
+
+struct InfoBar {
+	sf::RectangleShape bar;
+	sf::Font font;
+	sf::Text canvasSize;
+	sf::Text mousePos;
+	sf::RenderWindow* window;
+};
+
+struct BoolSwitches {
+	bool isColorSet = false;
+	bool colorPicked = false;
+	bool isPointerSet = false;
+	bool isPointerSetCP = false;
+};

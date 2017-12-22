@@ -7,11 +7,12 @@ PointerManager::PointerManager()
 }
 
 
-void PointerManager::Add(std::string name, const std::string filename, const sf::Vector2f& size) {
+void PointerManager::Add(std::string name, const std::string filename, const sf::Vector2f& size, const sf::Vector2f& origin) {
 	m_pointer = new Pointer();
 	m_pointer->rect.setSize(size);
 	m_pointer->tex.loadFromFile("./assets/pointers/" + filename);
 	m_pointer->rect.setTexture(&m_pointer->tex);
+	m_pointer->rect.setOrigin(origin);
 	std::unordered_map<std::string, Pointer>::const_iterator found = m_pointers.find(name);
 	while (found != m_pointers.end()) {
 		name += "0";

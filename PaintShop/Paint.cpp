@@ -38,20 +38,20 @@ inline void Paint::init_colorIcons() {
 }
 
 inline void Paint::init_tweakIcons() {
-	m_widgets.tweakIcons.Add("colorPicker", sf::Vector2f(50, 55), sf::Vector2f(900 + (8 - 4) * 30, 20), "colorEditor.png", sf::IntRect(4, 5, 307, 309),
+	m_widgets.tweakIcons.Add("colorPicker", sf::Vector2f(50, 50), sf::Vector2f(900 + (8 - 4) * 30, 20), "colorEditor.png", sf::IntRect(4, 5, 307, 309),
 		sf::IntRect(6, 7, 305, 307), sf::IntRect(8, 9, 303, 305));
 }
 
 inline void Paint::init_pointers() {
-	m_pointers.Add("brush", "brush.png", sf::Vector2f(40, 40));
-	m_pointers.Add("pen", "pen.png", sf::Vector2f(40, 40));
-	m_pointers.Add("eraser", "eraser.png", sf::Vector2f(40, 40));
-	m_pointers.Add("colorPicker", "color_picker.png", sf::Vector2f(40, 40));
+	m_pointers.Add("brush", "brush.png", sf::Vector2f(40, 40), sf::Vector2f(2, 37));
+	m_pointers.Add("pen", "pen.png", sf::Vector2f(40, 40), sf::Vector2f(1, 39));
+	m_pointers.Add("eraser", "eraser.png", sf::Vector2f(40, 40), sf::Vector2f(20, 20));
+	m_pointers.Add("colorPicker", "color_picker.png", sf::Vector2f(40, 40), sf::Vector2f(3, 37));
 }
 
 inline void Paint::init_randomStuff() {
 	m_currentColorDisplay.setPosition(835, 20);
-	m_currentColorDisplay.setSize(sf::Vector2f(50, 55));
+	m_currentColorDisplay.setSize(sf::Vector2f(50, 50));
 	m_currentColorDisplay.setFillColor(sf::Color::Black);
 
 	m_brushSlider.AddSlider(sf::Vector2f(120, 30), 10, 200, 35);
@@ -63,6 +63,21 @@ inline void Paint::init_randomStuff() {
 	m_colorWheel.rect.setTexture(&m_colorWheel.tex);
 }
 
+inline void Paint::init_infoBar() {
+	m_infoBar.bar.setPosition(0, m_windows.mainWindow.getSize().y - 20);
+	m_infoBar.bar.setSize(sf::Vector2f(m_windows.mainWindow.getSize().x, 20));
+	m_infoBar.bar.setFillColor(sf::Color(226, 227, 255));
+	m_infoBar.font.loadFromFile("./assets/font.ttf");
+	m_infoBar.canvasSize.setFont(m_infoBar.font);
+	m_infoBar.mousePos.setFont(m_infoBar.font);
+	m_infoBar.canvasSize.setFillColor(sf::Color::Black);
+	m_infoBar.mousePos.setFillColor(sf::Color::Black);
+	m_infoBar.canvasSize.setCharacterSize(12);
+	m_infoBar.mousePos.setCharacterSize(12);
+	m_infoBar.mousePos.setPosition(50, m_windows.mainWindow.getSize().y - 15);
+	m_infoBar.canvasSize.setPosition(950, m_windows.mainWindow.getSize().y - 15);
+}
+
 // end_inits --------------------------------------
 
 
@@ -72,7 +87,6 @@ void Paint::Draw(sf::RenderWindow& window, const sf::IntRect& bounds, int width,
 	sf::IntRect DrawBounds = { bounds.left + width, bounds.top + height, bounds.width - width*2, bounds.height - height*2};
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && Interface::IsMouseInBounds(window, DrawBounds)) {
-		std::cout << "in";
 		for (int x = sf::Mouse::getPosition(window).x - width; x < sf::Mouse::getPosition(window).x + width; x++) {
 			for (int y = sf::Mouse::getPosition(window).y - height; y < sf::Mouse::getPosition(window).y + height; y++) {
 				m_data->canvas->setPixel(x - m_data->canvas_bounds.left, y - m_data->canvas_bounds.top, color);
@@ -115,11 +129,11 @@ inline void Paint::Clear() {
 void Paint::SelectClickedColor() {
 	for (unsigned int i = 0; i < 8; i++) {
 		if (m_widgets.colorIcons.Get(m_colorsNames[i]).IsClicked()) {
-			m_colorPicked = false;
+			m_boolSwitches.colorPicked = false;
 			m_selectedColor = (Colors)i;
 		}
 	}
-	if (!m_colorPicked) {
+	if (!m_boolSwitches.colorPicked) {
 		ChangeColor();
 	}
 }
@@ -170,7 +184,7 @@ void Paint::ChangeColor() {
 
 void Paint::LaunchWindows() {
 	if (m_widgets.tweakIcons.Get("colorPicker").IsClicked()) {
-		m_isColorSet = false;
+		m_boolSwitches.isColorSet = false;
 		this->RunWindow(m_windows.colorPickerWindow, sf::Vector2u(600, 500), "Color Picker", &Paint::ColorPickerWindow);
 	}
 }
@@ -193,38 +207,57 @@ void Paint::PaintStuff() {
 
 inline void Paint::UpdateColorDisplay() {
 	m_currentColorDisplay.setPosition(835, 20);
-	m_currentColorDisplay.setSize(sf::Vector2f(50, 55));
+	m_currentColorDisplay.setSize(sf::Vector2f(50, 50));
 	m_currentColorDisplay.setFillColor(m_paintColor);
 	m_windows.mainWindow.draw(m_currentColorDisplay);
 }
 
 void Paint::SetPointer() {
 	if (Interface::IsMouseInBounds(m_windows.mainWindow, sf::IntRect(m_data->canvas_bounds))) {
-		if (m_widgets.toolIcons.Get("brush").IsClicked()) {
-			m_pointers.SetPointer("brush");
-		}
-		else if (m_widgets.toolIcons.Get("pen").IsClicked()) {
-			m_pointers.SetPointer("pen");
-		}
-		else if (m_widgets.toolIcons.Get("eraser").IsClicked()) {
-			m_pointers.SetPointer("eraser");
-		}
-		else {
-			m_pointers.DontDisplay();
+		if (!m_boolSwitches.isPointerSet) {
+			std::cout << "in";
+			if (m_widgets.toolIcons.Get("brush").IsClicked()) {
+				m_pointers.SetPointer("brush");
+			}
+			else if (m_widgets.toolIcons.Get("pen").IsClicked()) {
+				m_pointers.SetPointer("pen");
+			}
+			else if (m_widgets.toolIcons.Get("eraser").IsClicked()) {
+				m_pointers.SetPointer("eraser");
+			}
+			else {
+				m_pointers.DontDisplay();
+			}
+			m_boolSwitches.isPointerSet = true;
 		}
 	}
 	else {
+		m_boolSwitches.isPointerSet = false;
 		m_pointers.DontDisplay();
 	}
+}
+
+void Paint::UpdateInfoBar() {
+	m_infoBar.canvasSize.setString("Canvas Size: " + std::to_string(m_data->canvas_bounds.width) + " x " + std::to_string(m_data->canvas_bounds.height));
+	if (Interface::IsMouseInBounds(m_windows.mainWindow, m_data->canvas_bounds)) {
+		sf::Vector2i Pos = { sf::Mouse::getPosition(m_windows.mainWindow).x - m_data->canvas_bounds.left, sf::Mouse::getPosition(m_windows.mainWindow).y - m_data->canvas_bounds.top };
+		m_infoBar.mousePos.setString("Position: " + std::to_string(Pos.x) + " x " + std::to_string(Pos.y));
+	}
+	else {
+		m_infoBar.mousePos.setString("Position: Outside Canvas");
+	}
+	m_windows.mainWindow.draw(m_infoBar.bar);
+	m_windows.mainWindow.draw(m_infoBar.canvasSize);
+	m_windows.mainWindow.draw(m_infoBar.mousePos);
 }
 
 // end_per-frame-functions ---------------------------------
 
 
 void Paint::ColorPickerWindow() {
-	if (!m_isColorSet) {
+	if (!m_boolSwitches.isColorSet) {
 		m_pixelColor = m_paintColor;
-		m_isColorSet = true;
+		m_boolSwitches.isColorSet = true;
 	}
 	m_windows.colorPickerWindow.clear(sf::Color::White);
 	m_windows.colorPickerWindow.draw(m_colorWheel.rect);
@@ -236,20 +269,33 @@ void Paint::ColorPickerWindow() {
 
 	int x = m_colorWheel.rect.getPosition().x;
 	int y = m_colorWheel.rect.getPosition().y;
-	int w = x + m_colorWheel.rect.getGlobalBounds().width;
-	int h = y + m_colorWheel.rect.getGlobalBounds().height;
+	int w = m_colorWheel.rect.getGlobalBounds().width;
+	int h = m_colorWheel.rect.getGlobalBounds().height;
 
+	if (Interface::IsMouseInBounds(m_windows.colorPickerWindow, sf::IntRect(x, y, w, h))) {
+		if (!m_boolSwitches.isPointerSetCP) {
+			m_pointers.SetPointer("colorPicker");
+			m_boolSwitches.isPointerSetCP = true;
+		}
+	}
+	else {
+		m_boolSwitches.isPointerSetCP = false;
+		m_pointers.DontDisplay();
+	}
+
+	m_pointers.Update(m_windows.colorPickerWindow);
 	m_cpRGB.setRGB(m_currentColorDisplay.getFillColor());
 	m_cpRGB.rgb.setPosition(65, 250);
 	m_windows.colorPickerWindow.draw(m_cpRGB.rgb);
 
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && Interface::IsMouseInBounds(m_windows.colorPickerWindow, sf::IntRect(x, y, w, h))) {
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && Interface::IsMouseInBounds(m_windows.colorPickerWindow, sf::IntRect(x, y, w-1, h-1))) {
 		m_pixelColor = m_colorWheel.img.getPixel(sf::Mouse::getPosition(m_windows.colorPickerWindow).x - x, sf::Mouse::getPosition(m_windows.colorPickerWindow).y - y);
 		m_currentColorDisplay.setFillColor(m_pixelColor);
 	}
+	
 	if (m_Ok_cancel_cp.ok_cancel.Get("ok").IsClicked()) {
 		m_widgets.colorIcons.DeselectAll();
-		m_colorPicked = true;
+		m_boolSwitches.colorPicked = true;
 		m_paintColor = m_pixelColor;
 		m_windows.colorPickerWindow.close();
 	}
@@ -275,6 +321,7 @@ void Paint::Initialize(Data* data) {
 	init_colorIcons();
 	init_tweakIcons();
 	init_pointers();
+	init_infoBar();
 
 	init_randomStuff();
 }
@@ -285,6 +332,7 @@ void Paint::Run() {
 	m_widgets.toolIcons.Update(m_windows.mainWindow);
 	m_widgets.colorIcons.Update(m_windows.mainWindow);
 	m_pointers.Update(m_windows.mainWindow);
+	UpdateInfoBar();
 	SelectClickedColor();
 	SelectClickedTools();
 	LaunchWindows();

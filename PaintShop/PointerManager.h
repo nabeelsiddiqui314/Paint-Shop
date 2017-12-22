@@ -15,7 +15,7 @@ public:
 	 PointerManager();
 	~PointerManager();
 public:
-	void Add(std::string name, const std::string filename, const sf::Vector2f& size);
+	void Add(std::string name, const std::string filename, const sf::Vector2f& size, const sf::Vector2f& origin);
 	void SetPointer(const std::string name);
 	void DontDisplay();
 	void Update(sf::RenderWindow& window);

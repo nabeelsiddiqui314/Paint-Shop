@@ -5,5 +5,5 @@ struct Data {
 	sf::Color    backroundColor;
 	sf::Image*   canvas;
 	sf::Vector2i window_size;
-	sf::IntRect  canvas_bounds = { 80, 100, 1100, 540 };
+	sf::IntRect  canvas_bounds = { 80, 85, 1100, 540 };
 };

@@ -8,13 +8,13 @@ Interface::Interface() {
 
 
 bool Interface::IsMouseInBounds(sf::RenderWindow& window) {
-	return sf::Mouse::getPosition(window).x > 0 && sf::Mouse::getPosition(window).x < window.getSize().x &&
-		   sf::Mouse::getPosition(window).y > 0 && sf::Mouse::getPosition(window).y < window.getSize().y;
+	return sf::Mouse::getPosition(window).x >= 0 && sf::Mouse::getPosition(window).x <= window.getSize().x &&
+		   sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).y <= window.getSize().y;
 }
 
 bool Interface::IsMouseInBounds(sf::RenderWindow& window, sf::IntRect bounds) {
-	return sf::Mouse::getPosition(window).x > bounds.left && sf::Mouse::getPosition(window).x < bounds.width  + bounds.left &&
-		   sf::Mouse::getPosition(window).y > bounds.top  && sf::Mouse::getPosition(window).y < bounds.height + bounds.top;
+	return sf::Mouse::getPosition(window).x >= bounds.left && sf::Mouse::getPosition(window).x <= bounds.width  + bounds.left &&
+		   sf::Mouse::getPosition(window).y >= bounds.top  && sf::Mouse::getPosition(window).y <= bounds.height + bounds.top;
 }
 
 bool Interface::IsHovered(sf::RenderWindow& window, sf::RectangleShape& button) {
@@ -34,7 +34,6 @@ bool Interface::IsClicked(sf::RenderWindow& window, sf::RectangleShape& button, 
 void Interface::SetPointer(sf::RenderWindow& window, sf::RectangleShape& pointer, bool hideMouse) {
 	window.setMouseCursorVisible(!hideMouse);
 
-	pointer.setOrigin(pointer.getGlobalBounds().width / 2, pointer.getGlobalBounds().height / 2);
 	sf::Vector2f mousePos(sf::Mouse::getPosition(window));
 	pointer.setPosition(mousePos);
 
