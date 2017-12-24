@@ -4,7 +4,8 @@
 
 Paint::Paint(sf::RenderWindow& window) : 
 	m_windows (window),
-	m_Ok_cancel_cp(sf::Vector2f(50, 450), sf::Vector2f(150, 450))
+	m_Ok_cancel_cp(sf::Vector2f(50, 450), sf::Vector2f(150, 450)),
+	m_Ok_cancel_save(sf::Vector2f(350, 450), sf::Vector2f(450, 450))
 {
 	
 }
@@ -14,13 +15,13 @@ Paint::Paint(sf::RenderWindow& window) :
 
 inline void Paint::init_toolIcons() {
 	m_tool = NONE;
-	m_widgets.toolIcons.Add("brush", sf::Vector2f(20, 20), sf::Vector2f(20, 20), "icons.png", sf::IntRect(0, 0, 20, 20),
+	m_widgets.toolIcons.Add("brush", sf::Vector2f(20, 20), sf::Vector2f(80, 20), "icons.png", sf::IntRect(0, 0, 20, 20),
 		sf::IntRect(0, 20, 20, 20), sf::IntRect(0, 40, 20, 20));
 
-	m_widgets.toolIcons.Add("pen", sf::Vector2f(20, 20), sf::Vector2f(50, 20), "icons.png", sf::IntRect(40, 0, 20, 20),
+	m_widgets.toolIcons.Add("pen", sf::Vector2f(20, 20), sf::Vector2f(110, 20), "icons.png", sf::IntRect(40, 0, 20, 20),
 		sf::IntRect(40, 20, 20, 20), sf::IntRect(40, 40, 20, 20));
 
-	m_widgets.toolIcons.Add("eraser", sf::Vector2f(20, 20), sf::Vector2f(80, 20), "icons.png", sf::IntRect(20, 0, 20, 20),
+	m_widgets.toolIcons.Add("eraser", sf::Vector2f(20, 20), sf::Vector2f(140, 20), "icons.png", sf::IntRect(20, 0, 20, 20),
 		sf::IntRect(20, 20, 20, 20), sf::IntRect(20, 40, 20, 20));
 }
 
@@ -61,15 +62,19 @@ inline void Paint::init_randomStuff() {
 	m_colorWheel.img.loadFromFile("./assets/color_wheel.png");
 	m_colorWheel.tex.loadFromImage(m_colorWheel.img);
 	m_colorWheel.rect.setTexture(&m_colorWheel.tex);
+
+	m_preview.rect.setPosition(70, 100);
+	m_preview.rect.setSize(sf::Vector2f(450, 250));
+
+	m_saveMsg.setCharacterSize(15);
+	m_saveMsg.setPosition(70, 50);
+	m_saveMsg.setFillColor(sf::Color::Black);
 }
 
 inline void Paint::init_infoBar() {
 	m_infoBar.bar.setPosition(0, m_windows.mainWindow.getSize().y - 20);
 	m_infoBar.bar.setSize(sf::Vector2f(m_windows.mainWindow.getSize().x, 20));
 	m_infoBar.bar.setFillColor(sf::Color(226, 227, 255));
-	m_infoBar.font.loadFromFile("./assets/font.ttf");
-	m_infoBar.canvasSize.setFont(m_infoBar.font);
-	m_infoBar.mousePos.setFont(m_infoBar.font);
 	m_infoBar.canvasSize.setFillColor(sf::Color::Black);
 	m_infoBar.mousePos.setFillColor(sf::Color::Black);
 	m_infoBar.canvasSize.setCharacterSize(12);
@@ -105,7 +110,6 @@ void Paint::RunWindow(sf::RenderWindow& window, sf::Vector2u windowSize, std::st
 			}
 		}
 
-		window.clear();
 		(this->*run)();
 		window.display();
 	}
@@ -187,6 +191,12 @@ void Paint::LaunchWindows() {
 		m_boolSwitches.isColorSet = false;
 		this->RunWindow(m_windows.colorPickerWindow, sf::Vector2u(600, 500), "Color Picker", &Paint::ColorPickerWindow);
 	}
+	if (m_widgets.saveIcon.Get("save").IsClicked()) {
+		m_preview.tex.loadFromImage(*m_data->canvas);
+		m_preview.rect.setTexture(&m_preview.tex);
+		m_saveMsg.setString("Save as: img" + std::to_string(m_data->img_number) + ".png");
+		this->RunWindow(m_windows.saveImg, sf::Vector2u(600, 500), "Save", &Paint::SaveWindow);
+	}
 }
 
 void Paint::PaintStuff() {
@@ -215,7 +225,6 @@ inline void Paint::UpdateColorDisplay() {
 void Paint::SetPointer() {
 	if (Interface::IsMouseInBounds(m_windows.mainWindow, sf::IntRect(m_data->canvas_bounds))) {
 		if (!m_boolSwitches.isPointerSet) {
-			std::cout << "in";
 			if (m_widgets.toolIcons.Get("brush").IsClicked()) {
 				m_pointers.SetPointer("brush");
 			}
@@ -304,8 +313,20 @@ void Paint::ColorPickerWindow() {
 	}
 }
 
-void Paint::ToolSizeWindow() {
+void Paint::SaveWindow() {
+	m_windows.saveImg.clear(sf::Color(222, 227, 255));
+	m_Ok_cancel_save.Update(m_windows.saveImg);
 
+	m_windows.saveImg.draw(m_preview.rect);
+	m_windows.saveImg.draw(m_saveMsg);
+
+	if (m_Ok_cancel_save.ok_cancel.Get("ok").IsClicked()) {
+		m_img.Save();
+		m_windows.saveImg.close();
+	}
+	if (m_Ok_cancel_save.ok_cancel.Get("cancel").IsClicked()) {
+		m_windows.saveImg.close();
+	}
 }
 
 
@@ -324,6 +345,8 @@ void Paint::Initialize(Data* data) {
 	init_infoBar();
 
 	init_randomStuff();
+	m_img.InitData(m_data);
+	m_widgets.saveIcon.Add("save", sf::Vector2f(25, 25), sf::Vector2f(5, 5), "saveIcon.png", sf::IntRect(0, 0, 25, 25), sf::IntRect(0, 25, 25, 25), sf::IntRect(0, 50, 25, 25));
 }
 
 void Paint::Run() {
@@ -331,6 +354,7 @@ void Paint::Run() {
 	m_widgets.tweakIcons.Update(m_windows.mainWindow);
 	m_widgets.toolIcons.Update(m_windows.mainWindow);
 	m_widgets.colorIcons.Update(m_windows.mainWindow);
+	m_widgets.saveIcon.Update(m_windows.mainWindow);
 	m_pointers.Update(m_windows.mainWindow);
 	UpdateInfoBar();
 	SelectClickedColor();

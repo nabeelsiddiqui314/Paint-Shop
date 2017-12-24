@@ -5,6 +5,7 @@
 #include "Interface.h"
 #include "Var_structs.h"
 #include "PointerManager.h"
+#include "SaveImg.h"
 
 enum Tool {
 	NONE,
@@ -56,13 +57,14 @@ private:
 	void UpdateInfoBar();
 
 	void ColorPickerWindow();
-	void ToolSizeWindow();
+	void SaveWindow();
 private:
 	Data*              m_data;
 	Tool               m_tool;
 	
 	Colors              m_selectedColor;
 	sf::Color           m_paintColor;
+	sf::Color           m_pixelColor;
 
 	Slider              m_brushSlider;
 	sf::RectangleShape  m_currentColorDisplay;
@@ -71,12 +73,14 @@ private:
 	Windows      m_windows;
 	WidgetGroups m_widgets;
 	RGB          m_cpRGB;
-	ColorWheel   m_colorWheel;
+	Rect         m_colorWheel;
 	Ok_Cancel    m_Ok_cancel_cp;
 	InfoBar      m_infoBar;
 	BoolSwitches m_boolSwitches;
-	
-	sf::Color    m_pixelColor;
+	Ok_Cancel    m_Ok_cancel_save;
+	SaveImg      m_img;
+	Rect         m_preview;
+	FormalText   m_saveMsg;
 
 	std::string   m_colorsNames[8] = { 
 		"BLACK",

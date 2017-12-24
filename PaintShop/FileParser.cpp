@@ -46,6 +46,10 @@ bool FileParser::OpenFiles() {
 
 			m_data->backroundColor = sf::Color(r, g, b);
 		}
+		else if (temp == "IMG_NUMBER") {
+			m_read_data >> temp;
+			m_data->img_number = std::stoi(temp, nullptr);
+		}
 	}
 
 	return true;
@@ -58,7 +62,9 @@ void FileParser::Write() {
 	m_write_data << "SIZE\n"
 		<< m_data->window_size.x << " " << m_data->window_size.y << "\n"
 		<< "BG-COLOR\n"
-		<< (int)m_data->backroundColor.r << " " << (int)m_data->backroundColor.g << " " << (int)m_data->backroundColor.b;
+		<< (int)m_data->backroundColor.r << " " << (int)m_data->backroundColor.g << " " << (int)m_data->backroundColor.b << "\n"
+		<< "IMG_NUMBER\n"
+		<< m_data->img_number << "\n";
 }
 
 void FileParser::PrintError(std::string errorMessage) {

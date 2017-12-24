@@ -1,5 +1,4 @@
 #pragma once
-#include "Widget.h"
 #include "WidgetManager.h"
 #include "Slider.h"
 #include <string>
@@ -9,6 +8,7 @@ struct Windows {
 	sf::RenderWindow& mainWindow;
 	sf::RenderWindow  colorPickerWindow;
 	sf::RenderWindow  toolSizeWindow;
+	sf::RenderWindow  saveImg;
 	Windows(sf::RenderWindow& window) : mainWindow(window) {}
 };
 
@@ -16,15 +16,31 @@ struct WidgetGroups {
 	WidgetManager toolIcons = WidgetManager(SELECT);
 	WidgetManager colorIcons = WidgetManager(SELECT);
 	WidgetManager tweakIcons = WidgetManager(INFINITE);
+	WidgetManager saveIcon = WidgetManager(INFINITE);
+};
+
+struct FormalText : public sf::Text {
+	FormalText() {
+		font.loadFromFile("./assets/fonts/openSans.ttf");
+		this->setFont(font);
+	}
+private:
+	sf::Font font;
+};
+
+struct FancyText : public sf::Text {
+	FancyText() {
+		font.loadFromFile("./assets/fonts/fancy.ttf");
+		this->setFont(font);
+	}
+private:
+	sf::Font font;
 };
 
 struct RGB {
-	sf::Font font;
-	sf::Text rgb;
+	FancyText rgb;
 
 	RGB() {
-		font.loadFromFile("./assets/font.ttf");
-		rgb.setFont(font);
 		rgb.setCharacterSize(18);
 		rgb.setFillColor(sf::Color::Black);
 	}
@@ -33,7 +49,7 @@ struct RGB {
 	}
 };
 
-struct ColorWheel {
+struct Rect {
 	sf::RectangleShape rect;
 	sf::Texture        tex;
 	sf::Image          img;
@@ -52,9 +68,8 @@ struct Ok_Cancel {
 
 struct InfoBar {
 	sf::RectangleShape bar;
-	sf::Font font;
-	sf::Text canvasSize;
-	sf::Text mousePos;
+	FancyText canvasSize;
+	FancyText mousePos;
 	sf::RenderWindow* window;
 };
 
