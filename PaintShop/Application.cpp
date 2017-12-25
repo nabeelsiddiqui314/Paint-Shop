@@ -14,12 +14,12 @@ Application::Application() : m_paint(m_window) {
 	m_canvasRect.setPosition(0, 0);
 	m_canvasRect.setSize(sf::Vector2f(m_data->window_size.x, m_data->window_size.y));
 	m_paint.Initialize(m_data);
+	m_canvasRect.setPosition(m_data->canvas_bounds.left, m_data->canvas_bounds.top);
+	m_canvasRect.setSize(sf::Vector2f(m_canvas.getSize()));
 	Run();
 }
 
 inline void Application::UpdateCanvas() {
-	m_canvasRect.setPosition(m_data->canvas_bounds.left, m_data->canvas_bounds.top);
-	m_canvasRect.setSize(sf::Vector2f(m_canvas.getSize()));
 	m_canvasTexture.loadFromImage(m_canvas);
 	m_canvasRect.setTexture(&m_canvasTexture);
 	m_window.draw(m_canvasRect);

@@ -55,7 +55,7 @@ inline void Paint::init_randomStuff() {
 	m_currentColorDisplay.setSize(sf::Vector2f(50, 50));
 	m_currentColorDisplay.setFillColor(sf::Color::Black);
 
-	m_brushSlider.AddSlider(sf::Vector2f(120, 30), 10, 200, 35);
+	m_brushSlider.AddSlider(sf::Vector2f(400, 30), 10, 200, 35);
 
 	m_colorWheel.rect.setSize(sf::Vector2f(367, 368));
 	m_colorWheel.rect.setPosition(225, 60);
@@ -89,12 +89,16 @@ inline void Paint::init_infoBar() {
 // re-usables -------------------------------------------------------------------------------------------------------------------
 
 void Paint::Draw(sf::RenderWindow& window, const sf::IntRect& bounds, int width, int height, const sf::Color& color) {
-	sf::IntRect DrawBounds = { bounds.left + width, bounds.top + height, bounds.width - width*2, bounds.height - height*2};
-
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && Interface::IsMouseInBounds(window, DrawBounds)) {
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && Interface::IsMouseInBounds(window, bounds)) {
 		for (int x = sf::Mouse::getPosition(window).x - width; x < sf::Mouse::getPosition(window).x + width; x++) {
 			for (int y = sf::Mouse::getPosition(window).y - height; y < sf::Mouse::getPosition(window).y + height; y++) {
-				m_data->canvas->setPixel(x - m_data->canvas_bounds.left, y - m_data->canvas_bounds.top, color);
+				if (x - m_data->canvas_bounds.left > m_data->canvas_bounds.width - 1 || x - m_data->canvas_bounds.left < 0 ||
+					y - m_data->canvas_bounds.top > m_data->canvas_bounds.height - 1 || y - m_data->canvas_bounds.top < 0) {
+
+				}
+				else {
+					m_data->canvas->setPixel(x - m_data->canvas_bounds.left, y - m_data->canvas_bounds.top, color);
+				}
 			}
 		}
 	}
@@ -355,6 +359,7 @@ void Paint::Run() {
 	m_widgets.toolIcons.Update(m_windows.mainWindow);
 	m_widgets.colorIcons.Update(m_windows.mainWindow);
 	m_widgets.saveIcon.Update(m_windows.mainWindow);
+	m_brushSlider.Update(m_windows.mainWindow);
 	m_pointers.Update(m_windows.mainWindow);
 	UpdateInfoBar();
 	SelectClickedColor();
